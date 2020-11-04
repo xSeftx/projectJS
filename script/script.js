@@ -85,7 +85,7 @@ window.addEventListener('DOMContentLoaded', function(){
             popUpAnimation.addEventListener('finish', () => {
               popUp.style.opacity = 1;
             });
-          };
+        };
 
         popUpBtn.forEach((elem)  => {
             elem.addEventListener('click', () => {
@@ -130,26 +130,20 @@ window.addEventListener('DOMContentLoaded', function(){
                 }
             }
         };
-            tabHeader.addEventListener('click', (event) => {
-                let target = event.target;
-                    target = target.closest('.service-header-tab');
-                if (target) {
-                    tab.forEach((item, i) => {
-                        if(item === target){
-                            toggleTabContent(i);
-                        }
-                    });
-                }
-            });
-        
-
-
+        tabHeader.addEventListener('click', (event) => {
+            let target = event.target;
+                target = target.closest('.service-header-tab');
+            if (target) {
+                tab.forEach((item, i) => {
+                    if(item === target){
+                        toggleTabContent(i);
+                    }
+                });
+            }
+        });
     };
 
     tabs();
-
-
-
 
 });
 
