@@ -37,12 +37,12 @@ window.addEventListener('DOMContentLoaded', function(){
 
             if(timer.timeRemaining > 0){
 
-                // let idInterval = setInterval(updateClock, 1000);
+                const idInterval = setInterval(updateClock, 1000);
             } else {
                 timerHours.textContent = '00';
                 timerMinutes.textContent = '00';
                 timerSeconds.textContent = '00';
-                // clearInterval(idInterval);
+                clearInterval(timer);
             }
             
             
@@ -50,7 +50,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
         updateClock();
     }
-    countTimer('6 november 2020');
+    countTimer('9 november 2020');
 
     // Menu
     const toggleMenu = () =>{
@@ -246,7 +246,7 @@ window.addEventListener('DOMContentLoaded', function(){
                 }
             });
             
-            startSlide(1000000);
+            startSlide(20000);
 
         };
 
@@ -256,6 +256,33 @@ window.addEventListener('DOMContentLoaded', function(){
     };
 
     tabs();
+
+    // Наша команда
+    const dataImg = () => {
+        const getImg = document.querySelectorAll('.command__photo');
+        getImg.forEach((item) => {  
+            const photoSrc = item.src;       
+            item.addEventListener('mouseover', () => {
+                item.src = item.dataset.img;                
+            });
+            item.addEventListener('mouseout', () => { 
+                item.src = photoSrc;
+             });
+             
+        });
+    };
+    dataImg();
+
+    // калькулятор
+    const inputCalculator = () => {
+        const inputCalc = document.querySelectorAll('.calc-block input[type=text]');
+        inputCalc.forEach((item) => {
+            item.addEventListener('input', (e) => item.value = item.value.replace(/[^0-9]/g, ''));
+
+        });
+
+    };
+    inputCalculator();
 
 });
 
