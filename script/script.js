@@ -1,11 +1,6 @@
 window.addEventListener('DOMContentLoaded', function(){
     'use strict';
 
-    
-    
-
-
-
     // Timer
     function countTimer(deadLine){
         const timerHours = document.querySelector('#timer-hours'),
@@ -291,6 +286,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
             if(calcCount.value > 1){
                 countValue += (calcCount.value - 1) / 10;
+
             }
 
             if(calcDay.value && calcDay.value < 5){
@@ -308,16 +304,20 @@ window.addEventListener('DOMContentLoaded', function(){
             if(total){
                 const interval = setInterval(function(){
                     if(totalValue.innerHTML*1+50 <= total){
-                        totalValue.innerHTML= totalValue.
-                        innerHTML*1+50;
+                        totalValue.innerHTML= totalValue.innerHTML*1+50;   
+                        
+                        
                     } else if(totalValue.innerHTML*1-50 >= total){
                         totalValue.innerHTML = totalValue.innerHTML*1-50;
+                        
                     }
-                    else{
+                    else if(totalValue.innerHTML === total){
                         clearInterval(interval);
-                    }   
-                });
-            
+                        
+                    }  
+                    
+                },1);
+                
 
             }
             
@@ -335,6 +335,76 @@ window.addEventListener('DOMContentLoaded', function(){
 
     calc();
 
+    //send-ajax-form
+
+    const sendForm = () => {
+        const errorMessage = 'Что то пошло не так...',
+            loadMessage = 'Загрузка...',
+            successMesage = 'Спасибо! Мы скоро с вами свяжемся!',
+            statusMessage = document.createElement('div');        
+        statusMessage.style.cssText = 'font-size: 2rem;'       
+        
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                form.appendChild(statusMessage);
+    
+                const formData = new FormData(form);
+                const body = {};
+                formData.forEach((val, key) => body[key] = val);                
+                statusMessage.textContent = loadMessage;
+                postData(body, () => {
+                    statusMessage.textContent = successMesage;
+                    }, (error) => {
+                    statusMessage.textContent = errorMessage;
+                    console.error(error);
+                }); 
+            });
+        
+        });
+
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {
+                           
+                
+                if(request.readyState !== 4) {
+                    return;
+                }    
+                if(request.status === 200) {
+                    outputData();                    
+                }else {
+                    errorData(request.status);                    
+                }
+            });
+
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'application/json');
+
+            request.send(JSON.stringify(body));
+        }
+        
+
+    };
+
+    sendForm();
+
+    const inputFormPhone = () => {
+        const inputPhoneValue = document.querySelectorAll('.form-phone');
+        inputPhoneValue.forEach(item => {
+            item.addEventListener('input', (e) => item.value = item.value.replace(/^\D \+/g, ''));    
+            
+        });
+
+    };
+
+    const inputFormMassege = () => {
+        document.querySelectorAll('input[name="user_name"], input[name="user_message"]').forEach(item => {
+            item.addEventListener('input', () => item.value = item.value.replace(/[^а-яА-Я \  ]/g, ''));
+            
+            
+        });
+    };    
 
     const inputCalculator = () => {
         const inputCalc = document.querySelectorAll('.calc-block input[type=text]');
@@ -344,6 +414,8 @@ window.addEventListener('DOMContentLoaded', function(){
         });
 
     };
+    inputFormMassege();
+    inputFormPhone();
     inputCalculator();
 
 });
