@@ -337,52 +337,55 @@ window.addEventListener('DOMContentLoaded', function(){
 
     //send-ajax-form
 
-    const sendForm = () => {
-        const errorMessage = 'Что то пошло не так...',
-            loadMessage = 'Загрузка...',
-            successMesage = 'Спасибо! Мы скоро с вами свяжемся!',
-            statusMessage = document.createElement('div');        
+    const sendForm = () => {        
+        const statusMessage = document.createElement('div');        
         statusMessage.style.cssText = 'font-size: 2rem;'       
         
         document.querySelectorAll('form').forEach(form => {
             form.addEventListener('submit', e => {
                 e.preventDefault();
-                form.appendChild(statusMessage);
-    
+                form.appendChild(statusMessage);    
                 const formData = new FormData(form);
                 const body = {};
                 formData.forEach((val, key) => body[key] = val);                
-                statusMessage.textContent = loadMessage;
-                postData(body, () => {
-                    statusMessage.textContent = successMesage;
-                    }, (error) => {
-                    statusMessage.textContent = errorMessage;
-                    console.error(error);
-                }); 
+                statusMessage.textContent = 'Загрузка...';                
+                postData(body, statusMessage);
+                form.querySelectorAll('input').forEach(item => {
+                    item.value = '';
+                });
+
+                
             });
+            
         
         });
 
-        const postData = (body, outputData, errorData) => {
-            const request = new XMLHttpRequest();
-            request.addEventListener('readystatechange', () => {
-                           
-                
+        const postData = (body, statusMessage) => {
+
+            return new Promise ((resolve, reject) => {
+                const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {                           
                 if(request.readyState !== 4) {
                     return;
                 }    
-                if(request.status === 200) {
-                    outputData();                    
+                else if(request.status === 200) {                    
+                    resolve(statusMessage.textContent = 'Спасибо! Мы скоро с вами свяжемся!');                
                 }else {
-                    errorData(request.status);                    
+                    reject(statusMessage.innerHTML = 'Что то пошло не так...');                    
                 }
             });
 
             request.open('POST', './server.php');
             request.setRequestHeader('Content-Type', 'application/json');
-
             request.send(JSON.stringify(body));
-        }
+
+            });
+            
+        };
+
+        postData()
+            .then()
+            .catch(error=>console.error(error));
         
 
     };
