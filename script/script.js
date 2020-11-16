@@ -339,7 +339,9 @@ window.addEventListener('DOMContentLoaded', function(){
 
     const sendForm = () => {        
         const statusMessage = document.createElement('div');        
-        statusMessage.style.cssText = 'font-size: 2rem;'       
+        statusMessage.style.cssText = `font-size: 2rem;
+                                    color: white`;
+               
         
         document.querySelectorAll('form').forEach(form => {
             form.addEventListener('submit', e => {
@@ -352,11 +354,9 @@ window.addEventListener('DOMContentLoaded', function(){
                 postData(body, statusMessage);
                 form.querySelectorAll('input').forEach(item => {
                     item.value = '';
-                });
-
                 
-            });
-            
+                });               
+            });            
         
         });
 
@@ -368,18 +368,25 @@ window.addEventListener('DOMContentLoaded', function(){
                 if(request.readyState !== 4) {
                     return;
                 }    
-                else if(request.status === 200) {                    
-                    resolve(statusMessage.textContent = 'Спасибо! Мы скоро с вами свяжемся!');                
+                else if(request.status === 200) {  
+                    
+                    setTimeout(() => {
+                        statusMessage.textContent = '';
+                    }, 5000);
+                    resolve(statusMessage.textContent = 'Спасибо! Мы скоро с вами свяжемся!'); 
+
                 }else {
                     reject(statusMessage.innerHTML = 'Что то пошло не так...');                    
                 }
+
+
             });
 
             request.open('POST', './server.php');
             request.setRequestHeader('Content-Type', 'application/json');
             request.send(JSON.stringify(body));
 
-            });
+            });            
             
         };
 
