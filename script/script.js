@@ -316,8 +316,7 @@ window.addEventListener('DOMContentLoaded', function(){
                         
                     }  
                     
-                },1);
-                
+                },1);               
 
             }
             
@@ -344,13 +343,17 @@ window.addEventListener('DOMContentLoaded', function(){
                
         
         document.querySelectorAll('form').forEach(form => {
+            
             form.addEventListener('submit', e => {
-                e.preventDefault();
+                e.preventDefault();        
+                
                 form.appendChild(statusMessage);    
                 const formData = new FormData(form);
                 const body = {};
                 formData.forEach((val, key) => body[key] = val);                
-                statusMessage.textContent = 'Загрузка...';                  
+                statusMessage.textContent = 'Загрузка...'; 
+                
+                                 
                 
                 postData(body)
                     .then(response => {
@@ -365,7 +368,17 @@ window.addEventListener('DOMContentLoaded', function(){
                     statusMessage.textContent = 'Спасибо! Мы скоро с вами свяжемся!'; 
                     
                 })
-                .catch(error => console.error(error));              
+                .catch(error => console.error(error)); 
+                
+                setTimeout(() => {
+                    form.querySelectorAll('input').forEach(item => {
+                        item.value = '';
+                    });
+                }, 3000);
+                
+                setTimeout(() => {
+                    form.removeChild(successMessage);
+                }, 7000);
             });            
         
         });
@@ -380,6 +393,24 @@ window.addEventListener('DOMContentLoaded', function(){
     };
 
     sendForm();
+
+    const scrollTo = () => {
+        const anchors = document.querySelectorAll('a')       
+
+        for (let anchor of anchors) {
+            anchor.addEventListener('click', e => {
+              e.preventDefault()              
+              const blockID = anchor.getAttribute('href')              
+              document.querySelector(blockID).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              })
+            })
+          }
+
+
+    };
+    scrollTo();
 
     const inputFormPhone = () => {
         const inputPhoneValue = document.querySelectorAll('.form-phone');
